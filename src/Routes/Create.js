@@ -95,7 +95,7 @@ class Create extends Component {
                     </P>
                 </DivP>
 
-                <MyLink to='/celebrate'>
+                <MyLink to='/main2'>
                           생성 및 조회하기
                 </MyLink>
             </Div>
