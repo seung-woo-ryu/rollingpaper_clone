@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import styled from "styled-components";
 import { Link,Route,BrowserRouter } from "react-router-dom";
 
+
 const Form = styled.form`
   margin-bottom: 50px;
   width: 100%;
@@ -19,8 +20,7 @@ const DivBody = styled.div`
     align-items:center;
     display:flex;
     justify-content:center;
-    transition: transform 1s linear
-    transform:translate(500px,30px);
+    transition: all 1s ease;
 `;
 
 const Div = styled.div`
@@ -31,7 +31,6 @@ const Div = styled.div`
     justify-content:space-between;
     align-items:center;
     line-height: 3rem;
-    transition: all 1s linear
 `;
 
 const DivP = styled.div`
@@ -67,42 +66,45 @@ const MyLink = styled(Link)`
 `;
 
 class Create extends Component { 
-    oninput(e){
-        // if(e.value.length > this.e.maxLength){
-        //      e.value = e.value.slic(0,e.maxLength)
-        //}
-
+    state = {
+        id: '',
+        pw: ''
     }
-  render(){
-    return (
-        <>
-        <DivBody>
-            <Div>
-                <DivP>
-                    <Form>
-                    <P>
-                        받을 사람은<br/>
-                        <Input placeholder="이름 혹은 애칭"/><br/>
-                        이에요.
-                    </P>
-                    </Form>
-                    <br/>
-                    <br/>
-                    <P>
-                        우리만의 신호는<br/>
-                        <Input maxlength="4" onInput={this.oninput(this)} type="password" placeholder="비밀번호"/><br/>
-                        이에요.
-                    </P>
-                </DivP>
+    
+    handleChnage = (e) => {
+        this.setState({[e.target.name]: e.target.value});
+    }
 
-                <MyLink to='/main2'>
-                          생성 및 조회하기
-                </MyLink>
-            </Div>
-        </DivBody>
-        </>
-    );
-  }
+    render(){
+      return (
+          <>
+          <DivBody>
+              <Div>
+                  <DivP>
+                      <Form>
+                      <P>
+                          받을 사람은<br/>
+                          <Input placeholder="이름 혹은 애칭" name="id" value={this.state.id} onChange={this.handleChnage}/><br/>
+                          이에요.
+                      </P>
+                      </Form>
+                      <br/>
+                      <br/>
+                      <P>
+                          우리만의 신호는<br/>
+                          <Input maxlength="4" name="pw" value={this.state.pw} onChange={this.handleChnage} type="password" placeholder="비밀번호"/><br/>
+                          이에요.
+                      </P>
+                  </DivP>
+
+                  <MyLink to={{pathname:'/main2',state:{ id: this.state.id, pw:this.state.pw}}}>
+                            생성 및 조회하기
+                  </MyLink>
+              </Div>
+          </DivBody>
+          </>
+      );
+    }
 }
 
 export default Create;

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { DB_API } from "../api";
 
 const DivBody = styled.div`
     height:100vh;
@@ -50,7 +51,26 @@ const MyLink = styled(Link)`
 `;
 
 class Celebrate extends Component { 
+    state ={
+        num: 0,
+        cnt: 0
+    }
+
+    async componentWillMount(){
+        try{
+            const v = DB_API.peopleCNT();
+            v.then((e)=>{
+                const cnt = e.data.results[1][0].cnt
+                const num = e.data.results[0][0].num
+                this.setState({cnt,num})
+            });
+        }catch{
+            console.log("Create Coponenentwillmount error")
+        }
+    }
+
   render(){
+      const {num,cnt} = this.state;
     return (
         <>
         <DivBody>
@@ -58,9 +78,9 @@ class Celebrate extends Component {
                 <DivP>
                     <P>
                         지금까지<br/>
-                        xxx명이 작성하고<br/>
-                        997명이 축하를<br/>
-                        받았어요!
+                        {num}명이 작성하고<br/>
+                        {cnt}개의 축하인사가<br/>
+                        작성되었어요!
                     </P>
                 </DivP>
 

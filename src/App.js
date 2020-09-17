@@ -5,7 +5,7 @@ import Celebrate from "./Routes/Celebrate";
 import Create from "./Routes/Create";
 import Main2 from "./Routes/Main2";
 import Editor from "./Routes/Editor";
-import { Switch, Link,Route,BrowserRouter } from "react-router-dom";
+import { Redirect,Switch, Route,BrowserRouter } from "react-router-dom";
 
 class App extends Component { 
   render(){
@@ -18,6 +18,7 @@ class App extends Component {
             <Route path='/create' exact component={Create}/>
             <Route path='/Main2' component={Main2}/>
             <Route path='/Editor' component={Editor}/>
+            <Redirect path='*' to='/' />
           </Switch>
         </BrowserRouter>
         <GlobalStyles />  

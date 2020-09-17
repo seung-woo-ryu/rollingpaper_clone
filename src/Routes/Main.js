@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import styled from "styled-components";
 import mainImg from '../Assets/main.gif';
-import { Link,Route,BrowserRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const DivBody = styled.div`
     height:100vh;
