@@ -1,21 +1,27 @@
 import React, {Component} from 'react'
 import styled from "styled-components";
-import { Link,Route,BrowserRouter } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
 
-import writingPaper from '../../Assets/writingPaper.png';
-import text from '../../Assets/text.png';
-import font from '../../Assets/font.png';
-import goBack from '../../Assets/goBack.png';
-import align from '../../Assets/align.png';
-import color from '../../Assets/color.png';
+import Font from '../../Components/Font';
+import Align from '../../Components/Align';
+import Color from '../../Components/Color';
+
+import writingPaper from './writingPaper.png';
+import text from './text.png';
+import goBack from './goBack.png';
+import align from './align_normal.png';
+import align_focus from './align_focus.png';
+import color_focus from './color_focus.png';
+import color from './color_normal.png';
+import font_focus from './font_focus.png';
+import font from './font_normal.png';
 
 const DivBody = styled.div`
     height:100vh;
     align-items:center;
     display:flex;
     justify-content:center;
-    background-color:${props => props.bgcolor};
+    background-color:${props => props.bgcolor ==='hidden' ? 'rgb(102, 102, 102)' : 'white'};
 `;
 
 const Div = styled.div`
@@ -29,7 +35,7 @@ const Div = styled.div`
 const Header = styled.div`
     width:400px;
     height:60px;
-    display:${props => props.display};
+    display:flex;
     justify-content:space-between;
     font-size:18px;
     font-weight:bold;
@@ -57,15 +63,16 @@ const Content = styled.div`
 `;
 
 const Textarea = styled(TextareaAutosize)`
+  overflow:hidden;  
   width:360px;
   outline:none;
   background:inherit;
   resize:none;
-  overflow:hidden;
   border:none;
-  text-align:center;
   font-size:20px;
-  font-family:'강부장님체';
+  font-family:${props=> props.curfont};
+  color:${props => props.curcolor};
+  text-align:${props=> props.curalign};
 `;
 
 const Span = styled.span`
@@ -73,6 +80,7 @@ const Span = styled.span`
   align-items:center;
   font-size:20px;
 `;
+
 const Footer = styled.div`
   display:${props => props.display};
   width:100%;
@@ -84,6 +92,7 @@ const DivFrom = styled.div`
   text-align:right;
   font-weight:lighter;
 `;
+
 const DivBnt = styled.div`
   display:flex;
   width:100%;
@@ -92,6 +101,7 @@ const DivBnt = styled.div`
   align-items:flex-end;
   padding:10px;
 `;
+
 const Input = styled.input`
   border: none;
   width:100px;
@@ -99,8 +109,8 @@ const Input = styled.input`
   font-size: 22px;
   outline: none;
 `;
-const Button = styled.div`
 
+const Button = styled.div`
   width:135px;
   height:65px;
   font-size:22px;
@@ -121,7 +131,7 @@ const Button = styled.div`
 const HeaderHidden = styled.div`
   width:400px;
   height:60px;
-  display:${props => props.display};
+  display:flex;
   justify-content:space-between;
   margin-top:40px;
   margin-bottom:30px;
@@ -142,24 +152,16 @@ const FooterHidden = styled.div`
   height:350px;  
   display:flex;
   flex-direction:column;
-  jusitfy-content:center;
-  align-items:center;
-  border: solid 1px;
+  justify-content:flex-end;
 `;
-const FontDiv = styled.div`
-  width:100%;
-  height:10px;
-  border:solid 1px;
-`;
+
 const SelectList = styled.div`
   display:flex;
   justify-content:center;
   width:470px;
   height:70px;
   background:rgba(0, 0, 0, 0.3);
-  
 `;
-
 
 const In = styled.div`
   width:40%;
@@ -169,43 +171,76 @@ const In = styled.div`
   align-items:center;
 `;
 
+const ListDiv = styled.div`
+  height:56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 class Editor extends Component { 
-  
-  state ={
-    height: 40,
-    bgcolor:'white',
-    header:'flex',
-    headerHidden:'none',
-    footer:'block',
-    footerHidden:'none'
-  }
-  
-  toggle = false;
-  textarea = React.createRef();
-  
-  handleClick = (e) =>{
-    this.textarea.current.focus();
-    this.toggle = true;
-    
-    if(this.toggle){
-      this.setState({
-        bgcolor:'rgb(102, 102, 102)',
-        header:'none',
-        headerHidden:'flex',
-        footer:'none',
-        footerHidden:'flex'
-      });
+  constructor(props){
+    super(props);
+    this.state ={
+      value:'',
+      fontArray:['굴림','궁서','돋움','Impact'],
+      alignArray:['left','center','right'],
+      colorArray:['rgb(0, 0, 0)','rgb(255, 255, 255)','rgb(244, 81, 30)','rgb(251, 192, 45)','rgb(0, 200, 83)','rgb(0, 145, 234)','rgb(0, 184, 212)','rgb(0, 105, 92)','rgb(170, 0, 255)','rgb(123, 31, 162)'],
+      showCurrent:'show',
+      showListCurrent:'none',
+      curcolor:'black',
+      curalign:'center',
+      curfont:'굴림'
     }
   }
+  
+  textarea = React.createRef();
+
+  handleChange = (e) =>{
+    this.setState({value:e.target.value})
+  }
+
+  handleClick = (e) =>{
+    this.textarea.current.focus();
+    this.setState({
+      showCurrent:'hidden'
+    });
+    
+  }
+  
+  handleGoBack = (e) =>{
+    this.setState({
+      showCurrent:'show'
+    });
+    
+  }
+
+  handleColorClick = (colorSelected) => {
+    this.setState({curcolor:colorSelected});
+  }
+
+  handleFontClick = (FontSelected) => {
+    this.setState({curfont:FontSelected});
+  }
+  
+  handleAlignClick = (AlignSelected) => {
+    this.setState({curalign:AlignSelected});
+  }
+
+  handleListBoxClick = (listName) =>{
+    this.setState({showListCurrent: listName});
+  };
   
   render(){
     return (
         <>
-          <DivBody bgcolor={this.state.bgcolor}ref={this.divBody}>
+          <DivBody bgcolor={this.state.showCurrent}ref={this.divBody}>
             <Div>
+              
+              {
+              this.state.showCurrent === 'show' ? 
               <Header display={this.state.header}ref={this.Header} >
-                <Span >
+                <Span>
                   취소
                 </Span>
                 <DivIcon>
@@ -213,47 +248,60 @@ class Editor extends Component {
                   <Icon src={writingPaper}/>
                 </DivIcon>
               </Header>
-      
+              :
               <HeaderHidden display={this.state.headerHidden}>
-                <Img width={24} height={28} src={goBack}/>
+                <Img width={24} height={28} src={goBack} onClick={this.handleGoBack}/>
                 <CompleteDiv>
                   완료
                 </CompleteDiv>
-              </HeaderHidden>
+              </HeaderHidden>  
+              }
 
-              <Content onClick={this.handleClick}>
-                <Textarea ref={this.textarea} maxRows={14} />
+              <Content onClick={this.handleClick} >
+                <Textarea ref={this.textarea} maxRows={14} curcolor={this.state.curcolor} curfont={this.state.curfont} curalign={this.state.curalign}/>
               </Content>
               
-              <Footer display={this.state.footer} ref={this.footer}>
-                <DivFrom>
-                  From.  
-                  <Input placeholder="보내는 이"/>
-                </DivFrom>
-                <DivBnt>
-                  <Button>
-                    저장
-                  </Button>
-                </DivBnt>
-              </Footer>
-
-              <FooterHidden display={this.state.footerHidden}>
-                <FontDiv>
-12321321  s
-                </FontDiv>
+              {
+                this.state.showCurrent ==='show' ?
+                <Footer display={this.state.footer} ref={this.footer}>
+                  <DivFrom>
+                    From.  
+                    <Input onChange={this.handleChange}value={this.state.value} placeholder="보내는 이"/>
+                  </DivFrom>
+                  <DivBnt>
+                    <Button>
+                      저장
+                    </Button>
+                  </DivBnt>
+                </Footer>  
+                :
+                <FooterHidden display={this.state.footerHidden} ref={this.footerHidden}>
+                <ListDiv>                                               
+                  {this.state.fontArray.map((font,idx)=>{
+                    return (<Font showListCurrent={this.state.showListCurrent} handleFontClick={this.handleFontClick} boxName="fontBox" fontType={font} currentfont={this.state.curfont} name={font} key={idx}/>)
+                  })}
+                  {this.state.alignArray.map((alignType,idx)=>{
+                    return (<Align showListCurrent={this.state.showListCurrent} handleAlignClick={this.handleAlignClick} boxName="alignBox" alignType={alignType} currentalign={this.state.curalign} name={alignType} key={idx}/>)
+                  })}
+                  {this.state.colorArray.map((colorType,idx)=>{
+                    return (<Color showListCurrent={this.state.showListCurrent} handleColorClick={this.handleColorClick} boxName="colorBox" colorType={colorType} current={this.state.curcolor} key={idx} />)
+                  })}
+                </ListDiv>
                 <SelectList>
                   <In>
-                    <Img width={50} height={50} src={font} />
-                    <Img width={50} height={50} src={align}/>
-                    <Img width={50} height={50} src={color}/>
+                    <Img onClick={()=>(this.handleListBoxClick('fontBox'))} width={50} height={50} src={this.state.showListCurrent === "fontBox" ? font_focus: font} />
+                    <Img onClick={()=>(this.handleListBoxClick('alignBox'))} width={50} height={50} src={this.state.showListCurrent === "alignBox" ? align_focus: align}/>
+                    <Img onClick={()=>(this.handleListBoxClick('colorBox'))} width={50} height={50} src={this.state.showListCurrent === "colorBox" ? color_focus: color}/>
                   </In>
                 </SelectList>
               </FooterHidden>
+              }     
             </Div>
           </DivBody>
         </>
     );
   }
+      
 }
 
 export default Editor;

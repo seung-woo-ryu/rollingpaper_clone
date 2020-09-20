@@ -16,8 +16,8 @@ class App extends Component {
             <Route path='/' exact component={Main}/>
             <Route path='/celebrate'  component={Celebrate}/>
             <Route path='/create' exact component={Create}/>
-            <Route path='/Main2' component={Main2}/>
-            <Route path='/Editor' component={Editor}/>
+            <Route path='/main2' component={Main2}/>
+            <Route path='/editor' component={Editor}/>
             <Redirect path='*' to='/' />
           </Switch>
         </BrowserRouter>

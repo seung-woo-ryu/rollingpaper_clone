@@ -1,5 +1,5 @@
-import React, {Componenet} from 'react';
-import styled, { createGlobalStyle } from "styled-components";
+import React from 'react';
+import styled from "styled-components";
 import btn from '../Assets/button3.png';
 import Card from './Card';
 import { Link} from "react-router-dom";

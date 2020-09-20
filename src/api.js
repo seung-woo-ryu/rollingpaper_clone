@@ -6,5 +6,5 @@ const api = axios.create({
 
 export const DB_API = {
   peopleCNT: () => api.get("peoplecnt"),
-  peopleName: (id,pw) => api.get(`peoplecnt/name?id=${id}&pw=${pw}`),
-}
+    peopleName: (id,pw) => api.get(`peoplecnt/name?id=${id}&pw=${pw}`),
+} 

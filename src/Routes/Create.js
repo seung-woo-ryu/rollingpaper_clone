@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import styled from "styled-components";
-import { Link,Route,BrowserRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 const Form = styled.form`

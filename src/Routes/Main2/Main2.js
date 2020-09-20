@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import styled from "styled-components";
-import { Link,Route,BrowserRouter } from "react-router-dom";
 import Paper from "../../Components/Paper"
 import { DB_API } from "../../api";
 
@@ -22,7 +21,7 @@ class Main2 extends Component {
 
   async componentWillMount(){
   
-    if (typeof(this.props.location.state) != "undefined" && this.props.location.state.id != "" && typeof(this.props.location.state) != "undefined" && this.props.location.state.pw != ""  )
+    if (typeof(this.props.location.state) !== "undefined" && this.props.location.state.id !== "" && typeof(this.props.location.state) !== "undefined" && this.props.location.state.pw !== ""  )
     {
       if(this.props.location.state.pw.length > 4){
         this.props.location.state.pw = this.props.location.state.pw.substring(0,4);
