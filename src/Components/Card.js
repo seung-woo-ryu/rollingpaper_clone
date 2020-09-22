@@ -16,6 +16,7 @@ const CardDiv = styled.div`
     transition: all ease 0.5s;
     &:hover{
         transform:rotate(0deg);
+        cursor:pointer;
     }
 `;
 

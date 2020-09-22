@@ -90,12 +90,12 @@ const FixedDIv = styled.div`
 `
 ;
 
-const Paper = ({name,results}) => (
+const Paper = ({id,results,pw}) => (
     <Div>
         <Header>
             <Name>
-                <H1>to. {name}</H1><br/><br/>
-                <P> {name}님을 축하해주세요!</P>
+                <H1>to. {id}</H1><br/><br/>
+                <P> {id}님을 축하해주세요!</P>
             </Name>
             <Button>
                 공유하기
@@ -113,17 +113,10 @@ const Paper = ({name,results}) => (
                 key = {idx}
             /> 
             )))}
-            
-            <Card fr="a" fontType ="Georgia" color="white" backgroundColor="black" content="123"/>
-            <Card fr="a" fontType ="Georgia" color="white" backgroundColor="blue" content="123"/>
-            <Card fr="a" fontType ="Georgia" color="white" backgroundColor="black" content="123"/>
-            <Card fr="a" fontType ="Georgia" color="white" backgroundColor="black" content="123"/>
-            <Card fr="a" fontType ="Georgia" color="white" backgroundColor="black" content="123"/>
-            <Card fr="a" fontType ="Georgia" color="white" backgroundColor="black" content="123"/>
         </Content>
         <FixedDIv>
             <Button3/>
-            <Button2 to='/editor'>
+            <Button2 to={{pathname:'/editor',state:{id:id, pw:pw}}}>
                 <div>롤링페이퍼 작성하기</div>
             </Button2>
         </FixedDIv>

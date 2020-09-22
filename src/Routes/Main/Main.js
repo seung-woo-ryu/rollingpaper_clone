@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import styled from "styled-components";
-import mainImg from '../Assets/main.gif';
+import mainImg from '../../Assets/main.gif';
 import { Link    } from "react-router-dom";
 
 const DivBody = styled.div`

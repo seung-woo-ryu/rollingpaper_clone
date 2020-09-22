@@ -20,22 +20,27 @@ class Main2 extends Component {
   }
 
   async componentWillMount(){
-  
-    if (typeof(this.props.location.state) !== "undefined" && this.props.location.state.id !== "" && typeof(this.props.location.state) !== "undefined" && this.props.location.state.pw !== ""  )
-    {
+    
+    try{
+      if (typeof(this.props.location.state) !== "undefined" && this.props.location.state.id !== "" && typeof(this.props.location.state) !== "undefined" && this.props.location.state.pw !== ""  )
+      {
       if(this.props.location.state.pw.length > 4){
         this.props.location.state.pw = this.props.location.state.pw.substring(0,4);
-      }
-        DB_API.peopleName(this.props.location.state.id,this.props.location.state.pw).then((e)=>{
+        }
+        await DB_API.peopleName(this.props.location.state.id,this.props.location.state.pw).then((e)=>{
         const results = e.data.results;
         const id = this.props.location.state.id;
-        this.setState({results,id});
+        const pw = this.props.location.state.pw;
+        this.setState({results,id,pw});
         });
-
-    }
+      }
     // id,pw가 유효하지 않으므로 
-    else{
-      this.props.history.push('/create');
+      else{
+        console.log(this.state);
+        this.props.history.push('/create');
+      }
+    }catch(err){
+      console.log('err content: ', err);
     }
   }
 
@@ -43,7 +48,7 @@ class Main2 extends Component {
     return (
         <>
           <DivBody>
-              <Paper name={this.state.id} results={this.state.results}/>
+              <Paper id={this.state.id} pw={this.state.pw} results={this.state.results}/>
           </DivBody>
         </>
     );

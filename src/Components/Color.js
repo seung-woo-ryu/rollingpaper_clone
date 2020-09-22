@@ -9,6 +9,9 @@ const ColorBox = styled.div`
     border:1px solid white;
     background-color:${props => props.colorType};
     margin-right:10px;
+    &:hover{
+        cursor:pointer;
+    }
 `;
 
 const Color = ({colorType,current,handleColorClick,showListCurrent,boxName}) =>(

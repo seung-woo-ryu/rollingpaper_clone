@@ -5,6 +5,7 @@ import Celebrate from "./Routes/Celebrate";
 import Create from "./Routes/Create";
 import Main2 from "./Routes/Main2";
 import Editor from "./Routes/Editor";
+import a from './a';
 import { Redirect,Switch, Route,BrowserRouter } from "react-router-dom";
 
 class App extends Component { 
@@ -14,10 +15,11 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route path='/' exact component={Main}/>
-            <Route path='/celebrate'  component={Celebrate}/>
+            <Route path='/celebrate' exact component={Celebrate}/>
             <Route path='/create' exact component={Create}/>
-            <Route path='/main2' component={Main2}/>
-            <Route path='/editor' component={Editor}/>
+            <Route path='/main2' exact component={Main2}/>
+            <Route path='/editor' exact component={Editor}/>
+            <Route path='/a' exact component={a}/>
             <Redirect path='*' to='/' />
           </Switch>
         </BrowserRouter>

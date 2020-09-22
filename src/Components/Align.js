@@ -10,6 +10,9 @@ const AlignBox = styled.div`
     display:${props => (props.showListCurrent === props.boxName ? "flex" :"none")};
     justify-content:center;
     align-items:center;
+    &:hover{
+        cursor:pointer;
+    }
 `;
 
 const Align = ({handleAlignClick,currentalign,alignType,name,showListCurrent,boxName}) =>(

@@ -14,6 +14,9 @@ const FontBox = styled.div`
     border-radius:6px;
     border:solid #fff 1px;
     background-color:${props => (props.currentfont === props.fontType ? 'white' : 'inherit')};
+    &:hover{
+        cursor:pointer;
+    }
 `;
 
 const Font = ({currentfont,handleFontClick,fontType,name,showListCurrent,boxName}) =>(

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { DB_API } from "../api";
+import { DB_API } from "../../api";
 
 const DivBody = styled.div`
     height:100vh;

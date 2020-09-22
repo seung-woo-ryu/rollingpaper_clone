@@ -5,6 +5,9 @@ import TextareaAutosize from 'react-autosize-textarea';
 import Font from '../../Components/Font';
 import Align from '../../Components/Align';
 import Color from '../../Components/Color';
+import PaperColor from '../../Components/PaperColor';
+import Photo from '../../Components/Photo';
+import Img from '../../Components/Img'
 
 import writingPaper from './writingPaper.png';
 import text from './text.png';
@@ -15,13 +18,20 @@ import color_focus from './color_focus.png';
 import color from './color_normal.png';
 import font_focus from './font_focus.png';
 import font from './font_normal.png';
+import paperColor from './paperColor.png';
+import paperColor_focus from './paperColor_focus.png';
+import camera from './camera.png';
+import camera_focus from './camera_focus.png';
+
+import { DB_API } from "../../api";
+
 
 const DivBody = styled.div`
     height:100vh;
-    align-items:center;
+    align-items:space-around;
     display:flex;
     justify-content:center;
-    background-color:${props => props.bgcolor ==='hidden' ? 'rgb(102, 102, 102)' : 'white'};
+    background-color:${props => (props.bgcolor ==='hidden' || props.bgcolor ==='paperHidden')? 'rgb(102, 102, 102)' : 'white'};
 `;
 
 const Div = styled.div`
@@ -33,7 +43,7 @@ const Div = styled.div`
 `;
 
 const Header = styled.div`
-    width:400px;
+    width:80%;
     height:60px;
     display:flex;
     justify-content:space-between;
@@ -47,26 +57,28 @@ const DivIcon = styled.div`
   display:flex;
   justify-content:space-between;
 `;
-const Icon = styled.img`
 
-  width:38px;
-  height:50px;
-`;
 const Content = styled.div`
-    width:380px;
-    height:380px;
+    position:relative;  
+    width:356px;
+    height:340px;
     border-radius: 10px;
     display:flex;
-    background-color:rgb(244, 244, 244);
+    background-color:${props =>props.curpapercolor};
     justify-content:center;
     align-items:center;
+    margin-bottom:15px;
 `;
 
 const Textarea = styled(TextareaAutosize)`
-  overflow:hidden;  
+  position:absoulte;
+  top:0;
+  right:0;
+  overflow:hidden;
+  zIndex:10;  
   width:360px;
   outline:none;
-  background:inherit;
+  background-color:transparent;
   resize:none;
   border:none;
   font-size:20px;
@@ -79,14 +91,20 @@ const Span = styled.span`
   display:flex;
   align-items:center;
   font-size:20px;
+  &:hover{
+    cursor:pointer;
+  }
 `;
 
 const Footer = styled.div`
-  display:${props => props.display};
-  width:100%;
+  display:flex;
+  height:40vh;
+  width:90%;
+  flex-direction:column;
+  justify-content:space-around;
 `;
 const DivFrom = styled.div`
-  margin-top:28px;
+  margin-top:10px;
   width:100 %;
   font-size 30px;
   text-align:right;
@@ -96,7 +114,7 @@ const DivFrom = styled.div`
 const DivBnt = styled.div`
   display:flex;
   width:100%;
-  height:35vh;
+  height:25vh;
   justify-content:flex-end;
   align-items:flex-end;
   padding:10px;
@@ -133,23 +151,23 @@ const HeaderHidden = styled.div`
   height:60px;
   display:flex;
   justify-content:space-between;
+  align-items:center;
   margin-top:40px;
   margin-bottom:30px;
   background-color:inherit;
 `;
 
-const Img = styled.img`
-width:${props => props.width}px;
-height:${props => props.width}px;
-`;
-
 const CompleteDiv = styled.div`
+
   font-size:22px;
   color:white;
+  &:hover{
+    cursor:pointer;
+  }
 `;
 
 const FooterHidden = styled.div`
-  height:350px;  
+  height:40vh;  
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
@@ -178,41 +196,93 @@ const ListDiv = styled.div`
   justify-content: center;
 `;
 
+const PaperColorDiv = styled.div`
+  display:grid;
+  grid-template-columns: repeat(2,1fr);
+  grid-auto-rows: 150px;
+  column-gap: 40px;
+  row-gap: 15px;
+`;
+
 class Editor extends Component { 
   constructor(props){
     super(props);
+    
     this.state ={
+      file:'',
+      uploadImg:'',
+      width:104,
+      height:104,
+      areaValue:'',
       value:'',
+      paperColorArray:['rgb(244, 244, 244)','rgb(255, 255, 255)','rgb(219, 230, 239)','rgb(242, 229, 229)','rgb(253, 255, 181)','rgb(230, 228, 217)','rgb(180, 212, 241)','rgb(241, 192, 181)','rgb(174, 155, 248)','rgb(243, 201, 130)','rgb(246, 109, 211)','rgb(116, 240, 163)','rgb(111, 166, 239)','rgb(142, 79, 235)','rgb(35, 35, 35)','','','','','','',''],
       fontArray:['굴림','궁서','돋움','Impact'],
       alignArray:['left','center','right'],
       colorArray:['rgb(0, 0, 0)','rgb(255, 255, 255)','rgb(244, 81, 30)','rgb(251, 192, 45)','rgb(0, 200, 83)','rgb(0, 145, 234)','rgb(0, 184, 212)','rgb(0, 105, 92)','rgb(170, 0, 255)','rgb(123, 31, 162)'],
-      showCurrent:'show',
+      show:'show',
       showListCurrent:'none',
+      showpapercolorimg:'paperColor',
       curcolor:'black',
       curalign:'center',
-      curfont:'굴림'
+      curfont:'굴림',
+      curpapercolor:'rgb(244, 244, 244)',
     }
+    
+
+    if (!(typeof(this.props.location.state) !== "undefined" && this.props.location.state.id !== "" && typeof(this.props.location.state) !== "undefined" && this.props.location.state.pw !== ""))
+    {
+      this.props.history.push('/create');
+    }
+
   }
-  
+
   textarea = React.createRef();
 
+
   handleChange = (e) =>{
-    this.setState({value:e.target.value})
+    this.setState({value:e.target.value});
+  }
+
+  handleAreaChange =(e) =>{
+    this.setState({areaValue:e.target.value});
   }
 
   handleClick = (e) =>{
     this.textarea.current.focus();
     this.setState({
-      showCurrent:'hidden'
+      show:'hidden'
     });
-    
   }
   
-  handleGoBack = (e) =>{
+  handlePaperColorClick = () =>{
+    this.setState({show:'paperHidden'});
+  }
+
+  handleGoBack = () =>{
     this.setState({
-      showCurrent:'show'
+      show:'show'
     });
-    
+  }
+
+  handleUploadImg = (e) =>{
+    // 미리보기
+    let reader = new FileReader();
+    // 전송할 때 쓰는 파일 변수
+    let file = e.target.files[0];
+    reader.onloadend = () =>{
+      this.setState({file:file, previewURL: reader.result.toString()});  
+    }
+    if (e.target.fils[0]){
+      reader.readAsDataURL(file);
+    }
+  }
+  
+  handlePaperShape = (shapeSelected) =>{
+    this.setState({showpapercolorimg:shapeSelected})
+  }
+
+  handlePaperColorDivClick = (paperColorSelected) =>{
+    this.setState({curpapercolor:paperColorSelected,uploadImg:'',width:'',height:''});
   }
 
   handleColorClick = (colorSelected) => {
@@ -231,50 +301,108 @@ class Editor extends Component {
     this.setState({showListCurrent: listName});
   };
   
+  handleSubmit = () =>{
+
+  }
+
+  handleImgUpload = (event) => {
+    const files = event.target.files[0];
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      this.setState({uploadImg:reader.result.toString(),width:'inherit',height:'inherit'});
+    }
+
+    if(files){
+      reader.readAsDataURL(files);
+    }
+  };
+
   render(){
     return (
         <>
-          <DivBody bgcolor={this.state.showCurrent}ref={this.divBody}>
+          <DivBody bgcolor={this.state.show}>
             <Div>
+              {
+                this.state.show ==='paperHidden' &&
+                <>
+                  <HeaderHidden>
+                    <Img width={24} height={28} src={goBack} onClick={this.handleGoBack}/>
+                    <div>
+                      <Img onPaperClick={this.handlePaperShape} imgName='paperColor' width={48} height={48} src={this.state.showpapercolorimg === 'paperColor' ? paperColor_focus : paperColor}/>
+                      <Img onPaperClick={this.handlePaperShape} imgName='camera' width={48} height={48} src={this.state.showpapercolorimg === 'camera' ? camera_focus : camera}/>
+                    </div>
+                    <CompleteDiv onClick={this.handleGoBack}>
+                      완료
+                    </CompleteDiv>
+                  </HeaderHidden>
+                  
+                  {this.state.showpapercolorimg ==='paperColor' &&
+                  <PaperColorDiv>
+                    {this.state.paperColorArray.map((paperColor,idx) =>{
+                      return <PaperColor handlePaperColorDivClick={this.handlePaperColorDivClick} paperColorType={paperColor} curpapercolor={this.state.curpapercolor} key={idx}> </PaperColor>
+                    })}
+                  </PaperColorDiv>
+                  }
+
+                  {this.state.showpapercolorimg ==='camera' &&
+                  <>
+                    <div style={{width:'380px', height:'380px'}}>
+                      <Photo width={this.state.width} height={this.state.height} uploadImg={this.state.uploadImg} handleUploadImg={this.handleImgUpload}/>
+                    </div>
+                  </>
+                  }
+                </>
+              }
               
               {
-              this.state.showCurrent === 'show' ? 
-              <Header display={this.state.header}ref={this.Header} >
-                <Span>
-                  취소
-                </Span>
-                <DivIcon>
-                  <Icon src={text}/>
-                  <Icon src={writingPaper}/>
-                </DivIcon>
-              </Header>
-              :
-              <HeaderHidden display={this.state.headerHidden}>
-                <Img width={24} height={28} src={goBack} onClick={this.handleGoBack}/>
-                <CompleteDiv>
-                  완료
-                </CompleteDiv>
-              </HeaderHidden>  
+               this.state.show ==='show' && 
+                <Header>
+                  <Span onClick={()=>this.props.history.goBack()}>
+                    취소
+                  </Span>
+                  <DivIcon>
+                    <Img width={38} height={50} onClick={this.handleClick} src={text}/>
+                    <Img width={38} height={50} onClick={this.handlePaperColorClick} src={writingPaper}/>
+                  </DivIcon>
+                </Header>
+              }
+              {
+                this.state.show === 'hidden' &&
+                <HeaderHidden display={this.state.headerHidden}>
+                  <Img width={24} height={28} src={goBack} onClick={this.handleGoBack}/>
+                  <CompleteDiv onClick={this.handleGoBack}>
+                    완료
+                  </CompleteDiv>
+                </HeaderHidden>  
               }
 
-              <Content onClick={this.handleClick} >
-                <Textarea ref={this.textarea} maxRows={14} curcolor={this.state.curcolor} curfont={this.state.curfont} curalign={this.state.curalign}/>
-              </Content>
-              
               {
-                this.state.showCurrent ==='show' ?
-                <Footer display={this.state.footer} ref={this.footer}>
+                (this.state.show ==='hidden' || this.state.show === 'show') &&
+                <Content curpapercolor={this.state.curpapercolor} onClick={this.handleClick} >
+                  {this.state.uploadImg && <img style={{position:'absolute',right:0,top:0,zIndex:1,'border-radius':'inherit',width:'inherit',height:'inherit'}} src={this.state.uploadImg}/>
+                  }
+                  <Textarea onChange={this.handleAreaChange} value={this.state.areaValue} ref={this.textarea} maxRows={14} curcolor={this.state.curcolor} curfont={this.state.curfont} curalign={this.state.curalign}/>
+                </Content>
+              }
+
+              {this.state.show  ==='show' &&
+                <Footer>
                   <DivFrom>
                     From.  
-                    <Input onChange={this.handleChange}value={this.state.value} placeholder="보내는 이"/>
+                    <Input onChange={this.handleChange} value={this.state.value} placeholder="보내는 이"/>
                   </DivFrom>
                   <DivBnt>
-                    <Button>
+                  
+                    <Button onClick={()=>DB_API.saveCardInfo(this.props.location.state.id,this.props.location.state.pw,this.state.areaValue,this.state.value,this.state.curfont,this.state.align,this.state.curcolor,this.state.curpapercolor,this.state.file)}>
                       저장
                     </Button>
                   </DivBnt>
                 </Footer>  
-                :
+              }
+
+              {
+                this.state.show === 'hidden' &&
                 <FooterHidden display={this.state.footerHidden} ref={this.footerHidden}>
                 <ListDiv>                                               
                   {this.state.fontArray.map((font,idx)=>{
@@ -286,7 +414,7 @@ class Editor extends Component {
                   {this.state.colorArray.map((colorType,idx)=>{
                     return (<Color showListCurrent={this.state.showListCurrent} handleColorClick={this.handleColorClick} boxName="colorBox" colorType={colorType} current={this.state.curcolor} key={idx} />)
                   })}
-                </ListDiv>
+              </ListDiv>
                 <SelectList>
                   <In>
                     <Img onClick={()=>(this.handleListBoxClick('fontBox'))} width={50} height={50} src={this.state.showListCurrent === "fontBox" ? font_focus: font} />
