@@ -5,8 +5,8 @@ import Celebrate from "./Routes/Celebrate";
 import Create from "./Routes/Create";
 import Main2 from "./Routes/Main2";
 import Editor from "./Routes/Editor";
-import a from './a';
 import { Redirect,Switch, Route,BrowserRouter } from "react-router-dom";
+import {hot} from "react-hot-loader";
 
 class App extends Component { 
   render(){
@@ -19,7 +19,6 @@ class App extends Component {
             <Route path='/create' exact component={Create}/>
             <Route path='/main2' exact component={Main2}/>
             <Route path='/editor' exact component={Editor}/>
-            <Route path='/a' exact component={a}/>
             <Redirect path='*' to='/' />
           </Switch>
         </BrowserRouter>
@@ -29,4 +28,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default hot(module)(App);

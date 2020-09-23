@@ -8,7 +8,8 @@ import Align from '../../Components/Align';
 import Color from '../../Components/Color';
 import PaperColor from '../../Components/PaperColor';
 import Photo from '../../Components/Photo';
-import Img from '../../Components/Img'
+import Img from '../../Components/Img';
+
 
 import writingPaper from './writingPaper.png';
 import text from './text.png';
@@ -23,6 +24,7 @@ import paperColor from './paperColor.png';
 import paperColor_focus from './paperColor_focus.png';
 import camera from './camera.png';
 import camera_focus from './camera_focus.png';
+
 
 import { DB_API } from "../../api";
 
@@ -266,6 +268,10 @@ class Editor extends Component {
     });
   }
 
+  handleGoBackClick = () =>{
+    this.setState({show:'sticker'});
+  }
+
   handleUploadImg = (e) =>{
     // 미리보기
     let reader = new FileReader();
@@ -325,108 +331,108 @@ class Editor extends Component {
         <>
           <DivBody bgcolor={this.state.show}>
             <Div>
-              {
-                this.state.show ==='paperHidden' &&
-                <>
-                  <HeaderHidden>
+                {
+                  this.state.show ==='paperHidden' &&
+                  <>
+                    <HeaderHidden>
+                      <Img width={24} height={28} src={goBack} onClick={this.handleGoBack}/>
+                      <div>
+                        <Img onPaperClick={this.handlePaperShape} imgName='paperColor' width={48} height={48} src={this.state.showpapercolorimg === 'paperColor' ? paperColor_focus : paperColor}/>
+                        <Img onPaperClick={this.handlePaperShape} imgName='camera' width={48} height={48} src={this.state.showpapercolorimg === 'camera' ? camera_focus : camera}/>
+                      </div>
+                      <CompleteDiv onClick={this.handleGoBack}>
+                        완료
+                      </CompleteDiv>
+                    </HeaderHidden>
+
+                    {this.state.showpapercolorimg ==='paperColor' &&
+                    <PaperColorDiv>
+                      {this.state.paperColorArray.map((paperColor,idx) =>{
+                        return <PaperColor handlePaperColorDivClick={this.handlePaperColorDivClick} paperColorType={paperColor} curpapercolor={this.state.curpapercolor} key={idx}> </PaperColor>
+                      })}
+                    </PaperColorDiv>
+                    }
+
+                    {this.state.showpapercolorimg ==='camera' &&
+                    <>
+                      <div style={{width:'380px', height:'380px'}}>
+                        <Photo width={this.state.width} height={this.state.height} uploadImg={this.state.uploadImg} handleUploadImg={this.handleImgUpload}/>
+                      </div>
+                    </>
+                    }
+                  </>
+                }
+
+                {
+                 this.state.show ==='show' && 
+                  <Header>
+                    <Span onClick={()=>this.props.history.goBack()}>
+                      취소
+                    </Span>
+                    <DivIcon>
+                      <Img width={38} height={50} onClick={this.handleClick} src={text}/>
+                      <Img width={38} height={50} onClick={this.handlePaperColorClick} src={writingPaper}/>
+                    </DivIcon>
+                  </Header>
+                }
+                {
+                  this.state.show === 'hidden' &&
+                  <HeaderHidden display={this.state.headerHidden}>
                     <Img width={24} height={28} src={goBack} onClick={this.handleGoBack}/>
-                    <div>
-                      <Img onPaperClick={this.handlePaperShape} imgName='paperColor' width={48} height={48} src={this.state.showpapercolorimg === 'paperColor' ? paperColor_focus : paperColor}/>
-                      <Img onPaperClick={this.handlePaperShape} imgName='camera' width={48} height={48} src={this.state.showpapercolorimg === 'camera' ? camera_focus : camera}/>
-                    </div>
                     <CompleteDiv onClick={this.handleGoBack}>
                       완료
                     </CompleteDiv>
-                  </HeaderHidden>
-                  
-                  {this.state.showpapercolorimg ==='paperColor' &&
-                  <PaperColorDiv>
-                    {this.state.paperColorArray.map((paperColor,idx) =>{
-                      return <PaperColor handlePaperColorDivClick={this.handlePaperColorDivClick} paperColorType={paperColor} curpapercolor={this.state.curpapercolor} key={idx}> </PaperColor>
+                  </HeaderHidden>  
+                }
+
+                {
+                  (this.state.show ==='hidden' || this.state.show === 'show') &&
+                  <Content curpapercolor={this.state.curpapercolor} onClick={this.handleClick} >
+                    {this.state.uploadImg && 
+                      <img alt="not loaded" style={{position:'absolute',right:0,top:0,zIndex:1,'border-radius':'inherit',width:'inherit',height:'inherit'}} src={this.state.uploadImg}/>
+                    }
+                    <Textarea onChange={this.handleAreaChange} value={this.state.areaValue} ref={this.textarea} maxRows={14} curcolor={this.state.curcolor} curfont={this.state.curfont} curalign={this.state.curalign}/>
+                  </Content>
+                }
+
+                {this.state.show  ==='show' &&
+                  <Footer>
+                    <DivFrom>
+                      From.  
+                      <Input onChange={this.handleChange} value={this.state.value} placeholder="보내는 이"/>
+                    </DivFrom>
+                    <DivBnt>
+
+                      <Button to={{pathname:'/main2',state:{id: this.props.location.state.id,pw:this.props.location.state.pw, re:true}}}onClick={this.handleSubmit}>
+                        저장
+                      </Button>
+                    </DivBnt>
+                  </Footer>  
+                }
+
+                {
+                  this.state.show === 'hidden' &&
+                  <FooterHidden display={this.state.footerHidden} ref={this.footerHidden}>
+                  <ListDiv>                                               
+                    {this.state.fontArray.map((font,idx)=>{
+                      return (<Font showListCurrent={this.state.showListCurrent} handleFontClick={this.handleFontClick} boxName="fontBox" fontType={font} currentfont={this.state.curfont} name={font} key={idx}/>)
                     })}
-                  </PaperColorDiv>
-                  }
-
-                  {this.state.showpapercolorimg ==='camera' &&
-                  <>
-                    <div style={{width:'380px', height:'380px'}}>
-                      <Photo width={this.state.width} height={this.state.height} uploadImg={this.state.uploadImg} handleUploadImg={this.handleImgUpload}/>
-                    </div>
-                  </>
-                  }
-                </>
-              }
-              
-              {
-               this.state.show ==='show' && 
-                <Header>
-                  <Span onClick={()=>this.props.history.goBack()}>
-                    취소
-                  </Span>
-                  <DivIcon>
-                    <Img width={38} height={50} onClick={this.handleClick} src={text}/>
-                    <Img width={38} height={50} onClick={this.handlePaperColorClick} src={writingPaper}/>
-                  </DivIcon>
-                </Header>
-              }
-              {
-                this.state.show === 'hidden' &&
-                <HeaderHidden display={this.state.headerHidden}>
-                  <Img width={24} height={28} src={goBack} onClick={this.handleGoBack}/>
-                  <CompleteDiv onClick={this.handleGoBack}>
-                    완료
-                  </CompleteDiv>
-                </HeaderHidden>  
-              }
-
-              {
-                (this.state.show ==='hidden' || this.state.show === 'show') &&
-                <Content curpapercolor={this.state.curpapercolor} onClick={this.handleClick} >
-                  {this.state.uploadImg && 
-                    <img alt="not loaded" style={{position:'absolute',right:0,top:0,zIndex:1,'border-radius':'inherit',width:'inherit',height:'inherit'}} src={this.state.uploadImg}/>
-                  }
-                  <Textarea onChange={this.handleAreaChange} value={this.state.areaValue} ref={this.textarea} maxRows={14} curcolor={this.state.curcolor} curfont={this.state.curfont} curalign={this.state.curalign}/>
-                </Content>
-              }
-
-              {this.state.show  ==='show' &&
-                <Footer>
-                  <DivFrom>
-                    From.  
-                    <Input onChange={this.handleChange} value={this.state.value} placeholder="보내는 이"/>
-                  </DivFrom>
-                  <DivBnt>
-                  
-                    <Button to={{pathname:'/main2',state:{id: this.props.location.state.id,pw:this.props.location.state.pw, re:true}}}onClick={this.handleSubmit}>
-                      저장
-                    </Button>
-                  </DivBnt>
-                </Footer>  
-              }
-
-              {
-                this.state.show === 'hidden' &&
-                <FooterHidden display={this.state.footerHidden} ref={this.footerHidden}>
-                <ListDiv>                                               
-                  {this.state.fontArray.map((font,idx)=>{
-                    return (<Font showListCurrent={this.state.showListCurrent} handleFontClick={this.handleFontClick} boxName="fontBox" fontType={font} currentfont={this.state.curfont} name={font} key={idx}/>)
-                  })}
-                  {this.state.alignArray.map((alignType,idx)=>{
-                    return (<Align showListCurrent={this.state.showListCurrent} handleAlignClick={this.handleAlignClick} boxName="alignBox" alignType={alignType} currentalign={this.state.curalign} name={alignType} key={idx}/>)
-                  })}
-                  {this.state.colorArray.map((colorType,idx)=>{
-                    return (<Color showListCurrent={this.state.showListCurrent} handleColorClick={this.handleColorClick} boxName="colorBox" colorType={colorType} current={this.state.curcolor} key={idx} />)
-                  })}
-              </ListDiv>
-                <SelectList>
-                  <In>
-                    <Img onClick={()=>(this.handleListBoxClick('fontBox'))} width={50} height={50} src={this.state.showListCurrent === "fontBox" ? font_focus: font} />
-                    <Img onClick={()=>(this.handleListBoxClick('alignBox'))} width={50} height={50} src={this.state.showListCurrent === "alignBox" ? align_focus: align}/>
-                    <Img onClick={()=>(this.handleListBoxClick('colorBox'))} width={50} height={50} src={this.state.showListCurrent === "colorBox" ? color_focus: color}/>
-                  </In>
-                </SelectList>
-              </FooterHidden>
-              }     
+                    {this.state.alignArray.map((alignType,idx)=>{
+                      return (<Align showListCurrent={this.state.showListCurrent} handleAlignClick={this.handleAlignClick} boxName="alignBox" alignType={alignType} currentalign={this.state.curalign} name={alignType} key={idx}/>)
+                    })}
+                    {this.state.colorArray.map((colorType,idx)=>{
+                      return (<Color showListCurrent={this.state.showListCurrent} handleColorClick={this.handleColorClick} boxName="colorBox" colorType={colorType} current={this.state.curcolor} key={idx} />)
+                    })}
+                </ListDiv>
+                  <SelectList>
+                    <In>
+                      <Img onClick={()=>(this.handleListBoxClick('fontBox'))} width={50} height={50} src={this.state.showListCurrent === "fontBox" ? font_focus: font} />
+                      <Img onClick={()=>(this.handleListBoxClick('alignBox'))} width={50} height={50} src={this.state.showListCurrent === "alignBox" ? align_focus: align}/>
+                      <Img onClick={()=>(this.handleListBoxClick('colorBox'))} width={50} height={50} src={this.state.showListCurrent === "colorBox" ? color_focus: color}/>
+                    </In>
+                  </SelectList>
+                </FooterHidden>
+                }    
             </Div>
           </DivBody>
         </>
