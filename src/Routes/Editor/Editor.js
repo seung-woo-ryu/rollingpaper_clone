@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import styled from "styled-components";
 import TextareaAutosize from 'react-autosize-textarea';
+import { Link } from "react-router-dom";
 
 import Font from '../../Components/Font';
 import Align from '../../Components/Align';
@@ -128,7 +129,8 @@ const Input = styled.input`
   outline: none;
 `;
 
-const Button = styled.div`
+const Button = styled(Link)`
+  text-decoration:none;
   width:135px;
   height:65px;
   font-size:22px;
@@ -302,7 +304,7 @@ class Editor extends Component {
   };
   
   handleSubmit = () =>{
-
+    DB_API.saveCardInfo(this.props.location.state.id,this.props.location.state.pw,this.state.areaValue,this.state.value,this.state.curfont,this.state.curalign,this.state.curcolor,this.state.curpapercolor,this.state.file);
   }
 
   handleImgUpload = (event) => {
@@ -380,7 +382,8 @@ class Editor extends Component {
               {
                 (this.state.show ==='hidden' || this.state.show === 'show') &&
                 <Content curpapercolor={this.state.curpapercolor} onClick={this.handleClick} >
-                  {this.state.uploadImg && <img style={{position:'absolute',right:0,top:0,zIndex:1,'border-radius':'inherit',width:'inherit',height:'inherit'}} src={this.state.uploadImg}/>
+                  {this.state.uploadImg && 
+                    <img alt="not loaded" style={{position:'absolute',right:0,top:0,zIndex:1,'border-radius':'inherit',width:'inherit',height:'inherit'}} src={this.state.uploadImg}/>
                   }
                   <Textarea onChange={this.handleAreaChange} value={this.state.areaValue} ref={this.textarea} maxRows={14} curcolor={this.state.curcolor} curfont={this.state.curfont} curalign={this.state.curalign}/>
                 </Content>
@@ -394,7 +397,7 @@ class Editor extends Component {
                   </DivFrom>
                   <DivBnt>
                   
-                    <Button onClick={()=>DB_API.saveCardInfo(this.props.location.state.id,this.props.location.state.pw,this.state.areaValue,this.state.value,this.state.curfont,this.state.align,this.state.curcolor,this.state.curpapercolor,this.state.file)}>
+                    <Button to={{pathname:'/main2',state:{id: this.props.location.state.id,pw:this.props.location.state.pw, re:true}}}onClick={this.handleSubmit}>
                       저장
                     </Button>
                   </DivBnt>

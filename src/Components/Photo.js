@@ -32,7 +32,6 @@ const Input = styled.input`
 function Photo({handleUploadImg,width=104,height=104,uploadImg=null}){
     return <>
         <PhotoBox>
-            {console.log("Photo 컴포넌트:", width,typeof(height),typeof(uploadImg))}
             <Input type="file" onChange={handleUploadImg} style={{display:"none"}}/>
             <Img width={width ? width : 104} height={height ? height : 104} src={uploadImg ? uploadImg : photo}/>
                 <span style={{display:uploadImg ? 'none': 'inline'}}>이곳을 클릭해 사진을 추가하세요.</span>        
