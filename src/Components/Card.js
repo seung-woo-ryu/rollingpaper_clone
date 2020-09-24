@@ -2,6 +2,7 @@ import React from 'react';
 import styled from "styled-components";
 
 const CardDiv = styled.div`
+    position:absoulte;
     width:130px;
     height:130px;
     border-radius:5px;
@@ -9,7 +10,7 @@ const CardDiv = styled.div`
     font-family: ${props => props.fontType};
     color:${props => props.color};
     display: flex;
-    border:1px solid;
+    border:none;
     justify-content:center;
     align-items: center;
     transform:rotate(${props => props.ndeg}deg);

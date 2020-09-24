@@ -5,7 +5,7 @@ import { DB_API } from "../../api";
 import Sticker from '../../Components/Sticker';
 
 const DivBody = styled.div`
-    height:100vh;
+    min-height:100vh;
     align-items:center;
     display:flex;
     justify-content:center;
@@ -20,7 +20,8 @@ class Main2 extends Component {
     results: null,
     show: 'paper',
     emoji: false,
-    emojiURL: ''
+    emojiURL: '',
+    resultsEmoji:null
   }
 
   async componentDidMount(){
@@ -35,6 +36,10 @@ class Main2 extends Component {
             const pw = this.props.location.state.pw;
             this.setState({results,id,pw});
           });
+          await DB_API.getEmoji(this.props.location.state.id,this.props.location.state.pw).then((e)=>{
+            const resultsEmoji = e.data.results;
+            this.setState({resultsEmoji});
+          });
         }
       // id,pw가 유효하지 않으므로 
         else{
@@ -46,7 +51,7 @@ class Main2 extends Component {
   }
 
   handleGoback = () =>{
-    this.setState({show:'paper'});
+    this.setState({show:'paper',emoji:false, emojiURL:''});
   }
 
   handleClick = () => {
@@ -63,7 +68,7 @@ class Main2 extends Component {
           <DivBody>
               {
                 this.state.show === 'paper' 
-                ? <Paper emoji={this.state.emoji} handleGoback={this.handleGoback}handleClick={this.handleClick} id={this.state.id} pw={this.state.pw} results={this.state.results}/>
+                ? <Paper resultsEmoji={this.state.resultsEmoji} handleMain2={this.handleMain2}emojiURL={this.state.emojiURL} emoji={this.state.emoji} handleGoback={this.handleGoback}handleClick={this.handleClick} id={this.state.id} pw={this.state.pw} results={this.state.results}/>
                 : <Sticker handleGoback={this.handleGoback} handleImgClick={this.handleImgClick}/>
               }
           </DivBody>

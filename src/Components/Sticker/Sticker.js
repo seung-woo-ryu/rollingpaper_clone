@@ -6,7 +6,7 @@ import Img2 from './main_sticker_02.png';
 import Img3 from './main_sticker_03.png';
 import Img4 from './main_sticker_04.png';
 import Img5 from './main_sticker_05.png';
-import { Route, withRouter } from "react-router-dom"; 
+import {withRouter } from "react-router-dom"; 
 
 
 const Div = styled.div`

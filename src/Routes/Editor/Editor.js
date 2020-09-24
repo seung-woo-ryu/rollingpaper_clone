@@ -25,7 +25,6 @@ import paperColor_focus from './paperColor_focus.png';
 import camera from './camera.png';
 import camera_focus from './camera_focus.png';
 
-
 import { DB_API } from "../../api";
 
 
