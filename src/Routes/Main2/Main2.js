@@ -1,8 +1,18 @@
 import React, {Component} from 'react'
-import styled from "styled-components";
+import styled,{keyframes} from "styled-components";
 import Paper from "../../Components/Paper"
 import { DB_API } from "../../api";
 import Sticker from '../../Components/Sticker';
+
+const TransformBox = keyframes`
+    0%{
+        transform: translateX(-100px)
+    }
+    100%{
+        transform: translateX(0px)
+    }
+    
+`;
 
 const DivBody = styled.div`
     min-height:100vh;
@@ -10,6 +20,7 @@ const DivBody = styled.div`
     display:flex;
     justify-content:center;
     background-color:#F2F2F2;
+    animation: ${TransformBox} 0.5s ease-in 1;
 `;
 
 class Main2 extends Component { 

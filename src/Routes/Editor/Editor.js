@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import styled from "styled-components";
+import styled,{keyframes} from "styled-components";
 import TextareaAutosize from 'react-autosize-textarea';
 import { Link } from "react-router-dom";
 
@@ -29,14 +29,36 @@ import { DB_API } from "../../api";
 
 
 const DivBody = styled.div`
-    height:100vh;
+    min-height:100vh;
     align-items:space-around;
     display:flex;
     justify-content:center;
     background-color:${props => (props.bgcolor ==='hidden' || props.bgcolor ==='paperHidden')? 'rgb(102, 102, 102)' : 'white'};
 `;
 
+const HeaderHidden = styled.div`
+  width:400px;
+  height:60px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:40px;
+  margin-bottom:30px;
+  background-color:inherit;
+`;
+
+
+const TransformBox = keyframes`
+    0%{
+        transform: translateX(-100px)
+    }
+    100%{
+        transform: translateX(0px)  
+    }
+`;
+
 const Div = styled.div`
+  animation: ${TransformBox} 0.5s ease-in 1;
     width: 450px;
     height:100%;
     display:flex;
@@ -100,7 +122,7 @@ const Span = styled.span`
 
 const Footer = styled.div`
   display:flex;
-  height:40vh;
+  height:30vh;
   width:90%;
   flex-direction:column;
   justify-content:space-around;
@@ -149,16 +171,6 @@ const Button = styled(Link)`
   cursor: pointer
 `;
 
-const HeaderHidden = styled.div`
-  width:400px;
-  height:60px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:40px;
-  margin-bottom:30px;
-  background-color:inherit;
-`;
 
 const CompleteDiv = styled.div`
 
@@ -170,7 +182,7 @@ const CompleteDiv = styled.div`
 `;
 
 const FooterHidden = styled.div`
-  height:40vh;  
+  height:29vh;  
   display:flex;
   flex-direction:column;
   justify-content:flex-end;

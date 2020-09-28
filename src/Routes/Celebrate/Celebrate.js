@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import styled from "styled-components";
+import styled,{keyframes} from "styled-components";
 import { Link } from "react-router-dom";
 import { DB_API } from "../../api";
 
@@ -10,6 +10,14 @@ const DivBody = styled.div`
     align-items:center;
 `;
 
+const TransformBox = keyframes`
+    0%{
+        transform: translateX(-100px)
+    }
+    100%{
+        transform: translateX(0px)
+    }
+`;
 const Div = styled.div`
     width:400px;
     height: 90vh;
@@ -18,6 +26,7 @@ const Div = styled.div`
     justify-content:space-between;
     align-items:center;
     line-height: 3rem;
+    animation: ${TransformBox} 0.5s ease-in 1;
 `;
 
 const DivP = styled.div`

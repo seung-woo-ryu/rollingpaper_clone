@@ -1,7 +1,17 @@
 import React, {Component} from 'react'
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import mainImg from './main.gif';
 import { Link    } from "react-router-dom";
+
+   
+const TransformBox = keyframes`
+    0%{
+        transform: translateX(-100px)
+    }
+    100%{
+        transform: translateX(0px)
+    }
+`;
 
 const DivBody = styled.div`
     height:100vh;
@@ -17,7 +27,7 @@ const Div = styled.div`
     justify-content:space-between;
     align-items:center;
     line-height: 3rem;
-    transition: all 1s linear
+    animation: ${TransformBox} 0.5s ease-in 1;
 `;
 
 const P = styled.p`
